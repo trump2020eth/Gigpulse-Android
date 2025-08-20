@@ -2,8 +2,9 @@ name: Android CI
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -19,18 +20,13 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # Android SDK so Gradle can compile
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-      - name: Install SDK packages
-        run: |
-          sdkmanager --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
-      # Install Gradle and GENERATE the wrapper in this repo
-      - name: Set up Gradle
+      - name: Set up Gradle 8.8
         uses: gradle/actions/setup-gradle@v3
-      - name: Generate Gradle wrapper (if missing)
-        run: gradle wrapper --gradle-version 8.8
+        with:
+          gradle-version: 8.8
 
       - name: Make wrapper executable
         run: chmod +x ./gradlew
